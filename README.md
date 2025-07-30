@@ -1,4 +1,4 @@
-# Welcome to your Solana-swap app 👋
+# Welcome to Solana-swap app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
@@ -33,7 +33,7 @@ This project is a simple swap app for Solana blockchain.
 - Favorites list
 
 ## Screenshots
-![<img src="./screenshot.png" alt="Screenshot" width="300" />](./screenshot.png)
+<img src="./screenshot.png" alt="Screenshot" style="width: 350px;" />
 
 ## Setup
 
