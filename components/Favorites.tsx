@@ -14,9 +14,13 @@ interface FavoritesProps {
 
 const styles = StyleSheet.create({
   favoritesItem: {
-    marginVertical: 8,
+    marginVertical: 12,
   },
   favoritesTitle: { marginBottom: 8 },
+  activeItem: {
+    opacity: 0.5,
+    backgroundColor: "#2e2e2e",
+  },
 });
 
 export const Favorites = ({
@@ -34,12 +38,12 @@ export const Favorites = ({
           data={tokensData}
           onDragEnd={({ data }) => setTokensData(data)}
           keyExtractor={(item: Token) => item.address}
-          renderItem={({ item, drag }) => (
+          renderItem={({ item, drag, isActive }) => (
             <TokenItem
               asFavorite
               token={item}
               onLongPress={drag}
-              style={styles.favoritesItem}
+              style={[styles.favoritesItem, isActive && styles.activeItem]}
             />
           )}
         />
