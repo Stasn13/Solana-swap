@@ -65,23 +65,23 @@ export const SwapBox = ({ style, tokens, ...props }: SwapBoxProps) => {
     [showTokenModal]
   );
 
-  const handleFromAmountChange = (amount: string) => {
+  const handleFromAmountChange = useCallback((amount: string) => {
     setFromAmount(amount);
     if (amount) {
       setToAmount(String(Number(amount) * CONVERSION_RATE));
     } else {
       setToAmount("");
     }
-  };
+  }, []);
 
-  const handleToAmountChange = (amount: string) => {
+  const handleToAmountChange = useCallback((amount: string) => {
     setToAmount(amount);
     if (amount) {
       setFromAmount(String((Number(amount) / CONVERSION_RATE).toFixed(6)));
     } else {
       setFromAmount("");
     }
-  };
+  }, []);
 
   return (
     <Animated.View
