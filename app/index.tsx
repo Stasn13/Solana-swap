@@ -9,7 +9,6 @@ import { Favorites } from "@/components/Favorites";
 /**
  * todo:
  *
- * 1. remove rdundant routing
  * 2. update readme with tech stack and architecture
  * 3. input validation
  * 4. test other devices
