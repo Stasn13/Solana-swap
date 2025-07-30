@@ -18,7 +18,7 @@ export interface ButtonProps {
   title: string;
 }
 
-const DURATION = 300;
+const DURATION = 180;
 
 const styles = StyleSheet.create({
   container: {
@@ -48,7 +48,7 @@ export const Button = ({
   isDisabled = false,
   isLoading = false,
   onPress,
-  scale = 0.95,
+  scale = 0.92,
   title,
 }: ButtonProps) => {
   const transition = useSharedValue(0);
