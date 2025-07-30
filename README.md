@@ -33,7 +33,7 @@ This project is a simple swap app for Solana blockchain.
 - Favorites list
 
 ## Screenshots
-![Example screenshot](./screenshot.png)
+![<img src="./screenshot.png" alt="Screenshot" width="300" />](./screenshot.png)
 
 ## Setup
 
@@ -64,4 +64,5 @@ Areas for improvement:
 - Integrate with Solana blockchain
 - More data on swap(ongoing transactions, gas fees, etc.)
 - Refactor components architecture. Preferrably use atomic design. Keep consistency with clean architecture approach splitted by layers: 
+
 ```domain -> use cases -> data -> presentation(UI)```
