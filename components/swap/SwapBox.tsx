@@ -1,21 +1,15 @@
 import { Token } from "@/types/Token.type";
 import {
-  TouchableOpacity,
   type TouchableOpacityProps,
-  Image,
-  View,
-  Text,
   StyleSheet,
   Modal,
   ScrollView,
 } from "react-native";
+import Animated, { FadeInUp } from "react-native-reanimated";
 import { Button } from "../ui/Button";
-import { Card } from "../ui/Card";
 import MaterialIcons from "@expo/vector-icons/build/MaterialIcons";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { TokenItem } from "../TokenItem";
-import { SwapInput } from "./SwapInput";
-import { ThemedText } from "../ui/ThemedText";
 import { SwapCard } from "./SwapCard";
 
 interface SwapBoxProps extends TouchableOpacityProps {
@@ -23,12 +17,11 @@ interface SwapBoxProps extends TouchableOpacityProps {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    gap: 8,
-  },
+  wrapper: {},
   swapIcon: {
-    marginBottom: 8,
+    marginVertical: -12,
     alignSelf: "center",
+    zIndex: 1,
   },
   label: {
     marginBottom: 8,
@@ -41,11 +34,13 @@ const styles = StyleSheet.create({
   tokenItem: { padding: 16 },
 });
 
+const CONVERSION_RATE = 150;
+
 export const SwapBox = ({ style, tokens, ...props }: SwapBoxProps) => {
   const [fromToken, setFromToken] = useState(tokens[0]);
   const [toToken, setToToken] = useState(tokens[1]);
-  const [fromAmount, setFromAmount] = useState(10);
-  const [toAmount, setToAmount] = useState(0);
+  const [fromAmount, setFromAmount] = useState("");
+  const [toAmount, setToAmount] = useState("");
   const [showTokenModal, setShowTokenModal] = useState<"from" | "to" | null>(
     null
   );
@@ -55,14 +50,50 @@ export const SwapBox = ({ style, tokens, ...props }: SwapBoxProps) => {
   };
 
   const handleSwap = () => {
-    // Call your onSwap handler here
     console.log(`Swap ${fromAmount} ${fromToken} to ${toAmount} ${toToken}`);
   };
+
+  const onPress = useCallback(
+    (token: Token) => {
+      if (showTokenModal === "from") {
+        setFromToken(token);
+      } else if (showTokenModal === "to") {
+        setToToken(token);
+      }
+      setShowTokenModal(null);
+    },
+    [showTokenModal]
+  );
+
+  const handleFromAmountChange = (amount: string) => {
+    setFromAmount(amount);
+    if (amount) {
+      setToAmount(String(Number(amount) * CONVERSION_RATE));
+    } else {
+      setToAmount("");
+    }
+  };
+
+  const handleToAmountChange = (amount: string) => {
+    setToAmount(amount);
+    if (amount) {
+      setFromAmount(String((Number(amount) / CONVERSION_RATE).toFixed(6)));
+    } else {
+      setFromAmount("");
+    }
+  };
+
   return (
-    <View style={[styles.wrapper, style]} {...props}>
+    <Animated.View
+      style={[styles.wrapper, style]}
+      entering={FadeInUp}
+      {...props}
+    >
       <SwapCard
         direction="from"
         onPress={() => selectToken("from")}
+        amount={fromAmount}
+        onChangeAmount={handleFromAmountChange}
         token={fromToken}
       />
       <MaterialIcons
@@ -74,42 +105,11 @@ export const SwapBox = ({ style, tokens, ...props }: SwapBoxProps) => {
       <SwapCard
         direction="to"
         onPress={() => selectToken("to")}
+        amount={toAmount}
+        onChangeAmount={handleToAmountChange}
         token={toToken}
       />
-      <Card
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <View>
-          <ThemedText style={styles.label} type="small" color="muted">
-            You Pay:{" "}
-          </ThemedText>
-          <TokenItem onPress={() => selectToken("from")} token={fromToken} />
-        </View>
-        <View style={{ marginTop: "auto" }}>
-          <SwapInput value={fromAmount.toString()} />
-          <ThemedText style={{ marginLeft: "auto" }} type="small" color="muted">
-            $100
-          </ThemedText>
-        </View>
-      </Card>
 
-      <Card>
-        <View>
-          <ThemedText style={styles.label} type="small" color="muted">
-            You Receive:{" "}
-          </ThemedText>
-          <TokenItem onPress={() => selectToken("to")} token={toToken} />
-        </View>
-        <View style={{ marginTop: "auto" }}>
-          <SwapInput value={toAmount.toString()} />
-          <ThemedText style={{ marginLeft: "auto" }} type="small" color="muted">
-            $100
-          </ThemedText>
-        </View>
-      </Card>
       <Button title={"Swap"} onPress={handleSwap} />
 
       <Modal
@@ -123,19 +123,12 @@ export const SwapBox = ({ style, tokens, ...props }: SwapBoxProps) => {
               asListItem
               key={token.address}
               style={styles.tokenItem}
-              onPress={() => {
-                if (showTokenModal === "from") {
-                  setFromToken(token);
-                } else if (showTokenModal === "to") {
-                  setToToken(token);
-                }
-                setShowTokenModal(null);
-              }}
+              onPress={() => onPress(token)}
               token={token}
             />
           ))}
         </ScrollView>
       </Modal>
-    </View>
+    </Animated.View>
   );
 };
