@@ -6,13 +6,6 @@ import { tokens } from "@/constants/Tokens";
 import { SwapBox } from "@/components/swap/SwapBox";
 import { Favorites } from "@/components/Favorites";
 
-/**
- * todo:
- *
- * 2. update readme with tech stack and architecture
- * 4. test other devices
- */
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
